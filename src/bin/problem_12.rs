@@ -58,15 +58,23 @@ fn main() -> Result<()> {
 fn problem_12(required_num_factors: usize) -> Result<usize> {
     // This is intentionally an open-ended iteration, and we're assuming that we'll
     // eventually find a solution and terminate.
-    #[allow(clippy::maybe_infinite_iter)]
+    #[allow(clippy::maybe_infinite_iter, clippy::unwrap_used)]
     let n = (1usize..)
         // I don't know a clean way to avoid this `unwrap()` since it's inside
         // the closure. There's a `try_find` in nightly that would do what I want,
-        // but I don't really want to go to nightly (I don't think). I _might_ be
-        // able to do something with `find_map` here, but I'm too tired to figure
-        // that out right now.
+        // but I don't really want to go to nightly (I don't think).
         .find(|n| num_divisors_for_n(*n).unwrap() > required_num_factors)
         .context("We never got a value")?;
+    // The code below avoids the `unwrap()`, but replaces it with an `unwrap_or()`,
+    // which I'm not convinced is a great choice. If `num_divisors_for()` returns
+    // an `Err`, we really want to propagate that `Err` on up the chain to `main()`
+    // rather than quietly swallow it. It seems that `try_find()` is really what we want,
+    // but I have no idea when it will crawl out of nightly into the light of day.
+    // .find(|n| {
+    //     num_divisors_for_n(*n)
+    //         .map(|nd| nd > required_num_factors)
+    //         .unwrap_or(false)
+    // })
 
     Ok(n * (n + 1) / 2)
 }
