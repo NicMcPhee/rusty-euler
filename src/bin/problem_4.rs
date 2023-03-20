@@ -15,10 +15,25 @@ Find the largest palindrome made from the product of two 3-digit numbers.
  */
 
 fn main() -> Result<()> {
-    // println!("Problem 4: {}", problem_4(3));
     println!("Problem 4: {}", problem_4(3)?);
+    // println!("Problem 4: {}", problem_4_simple());
     Ok(())
 }
+
+// fn problem_4_simple() -> u32 {
+//     let mut largest = u32::MIN;
+//     for x in 0..=999 {
+//         for y in x..=999 {
+//             let p = x * y;
+//             let s = p.to_string();
+//             if p > largest && is_palindrome(&s) {
+//                 // println!("New largest {p} from ({x}, {y}).");
+//                 largest = p;
+//             }
+//         }
+//     }
+//     largest
+// }
 
 struct PairIter {
     max_value: u32,
